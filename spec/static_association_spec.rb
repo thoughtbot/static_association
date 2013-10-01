@@ -84,4 +84,22 @@ describe StaticAssociation do
       end
     end
   end
+
+  describe ".belongs_to_static" do
+    class AssociationClass
+      attr_accessor :dummy_class_id
+      
+      extend StaticAssociation::AssociationHelpers
+      belongs_to_static :dummy_class
+    end
+
+    let(:associated_class) { AssociationClass.new }
+
+    it "creates reader method that uses the correct singularized class when finding static association" do
+      expect {
+        DummyClass.should_receive(:find)
+      }
+      associated_class.dummy_class
+    end
+  end
 end
