@@ -52,7 +52,7 @@ module StaticAssociation
       self.send(:define_method, name) do
         begin
           foreign_key = self.send("#{name}_id")
-          name.to_s.classify.constantize.find(foreign_key) if foreign_key
+          name.to_s.camelize.constantize.find(foreign_key) if foreign_key
         rescue RecordNotFound
           nil
         end
