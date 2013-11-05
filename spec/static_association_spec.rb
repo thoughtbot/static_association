@@ -88,9 +88,11 @@ describe StaticAssociation do
   describe ".belongs_to_static" do
     class AssociationClass
       attr_accessor :dummy_class_id
+      attr_accessor :dodo_class_id
 
       extend StaticAssociation::AssociationHelpers
       belongs_to_static :dummy_class
+      belongs_to_static :dodo_class, class_name: 'DummyClass'
     end
 
     let(:associated_class) { AssociationClass.new }
@@ -100,6 +102,13 @@ describe StaticAssociation do
         DummyClass.should_receive(:find)
       }
       associated_class.dummy_class
+    end
+
+    it "creates a different reader method that uses the specified class when finding static asssociation" do
+      expect {
+        DummyClass.should_receive(:find)
+      }
+      associated_class.dodo_class
     end
   end
 end

@@ -48,11 +48,13 @@ module StaticAssociation
   end
 
   module AssociationHelpers
-    def belongs_to_static(name)
+    def belongs_to_static(name, opts = {})
+      class_name = opts.fetch(:class_name, name.to_s.camelize)
+
       self.send(:define_method, name) do
         begin
           foreign_key = self.send("#{name}_id")
-          name.to_s.camelize.constantize.find(foreign_key) if foreign_key
+          class_name.constantize.find(foreign_key) if foreign_key
         rescue RecordNotFound
           nil
         end
