@@ -22,7 +22,7 @@ module StaticAssociation
   module ClassMethods
     include Enumerable
 
-    delegate :each, :to => :all
+    delegate :each, to: :all
 
     def index
       @index ||= ActiveSupport::OrderedHash.new
