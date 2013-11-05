@@ -15,7 +15,7 @@ describe StaticAssociation do
   describe ".record" do
     it "should add a record" do
       expect {
-        DummyClass.record :id => 1 do |c|
+        DummyClass.record id: 1 do |c|
           c.name = 'asdf'
         end
       }.to change(DummyClass, :count).by(1)
@@ -24,11 +24,11 @@ describe StaticAssociation do
     context "id uniqueness" do
       it "should raise an error with a duplicate id" do
         expect {
-          DummyClass.record :id => 1 do |c|
+          DummyClass.record id: 1 do |c|
             c.name = 'asdf'
           end
 
-          DummyClass.record :id => 1 do |c|
+          DummyClass.record id: 1 do |c|
             c.name = 'asdf'
           end
         }.to raise_error(StaticAssociation::DuplicateID)
@@ -36,8 +36,8 @@ describe StaticAssociation do
     end
 
     context "sets up the instance" do
-      subject { 
-        DummyClass.record :id => 1 do |c|
+      subject {
+        DummyClass.record id: 1 do |c|
           c.name = 'asdf'
         end
       }
@@ -47,7 +47,7 @@ describe StaticAssociation do
     end
 
     context "without a block" do
-      subject { DummyClass.record :id => 1 }
+      subject { DummyClass.record id: 1 }
 
       its(:id) { should == 1 }
       its(:name) { should be_nil }
@@ -56,7 +56,7 @@ describe StaticAssociation do
     context "asserting valid keys" do
       it "should raise an error" do
         expect {
-          DummyClass.record :id => 1, :foo => :bar
+          DummyClass.record id: 1, foo: :bar
         }.to raise_error(ArgumentError)
       end
     end
@@ -64,7 +64,7 @@ describe StaticAssociation do
 
   describe ".find" do
     before do
-      DummyClass.record :id => 1 do |c|
+      DummyClass.record id: 1 do |c|
         c.name = 'asdf'
       end
     end
@@ -88,7 +88,7 @@ describe StaticAssociation do
   describe ".belongs_to_static" do
     class AssociationClass
       attr_accessor :dummy_class_id
-      
+
       extend StaticAssociation::AssociationHelpers
       belongs_to_static :dummy_class
     end
