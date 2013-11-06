@@ -1,5 +1,7 @@
 # StaticAssociation
 
+[![Build Status](https://travis-ci.org/New-Bamboo/static_association.png?branch=master)](https://travis-ci.org/New-Bamboo/static_association)
+
 Adds basic ActiveRecord like associations to static data.
 
 This has been extracted from ProjectsDB and Hotleads, see the `BudgetCategory`, `Project` and `ArchiveReason`, `Lead` classes respectively for examples.
