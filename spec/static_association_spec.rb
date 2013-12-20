@@ -15,8 +15,8 @@ describe StaticAssociation do
   describe ".record" do
     it "should add a record" do
       expect {
-        DummyClass.record id: 1 do |c|
-          c.name = 'asdf'
+        DummyClass.record id: 1 do
+          self.name = 'asdf'
         end
       }.to change(DummyClass, :count).by(1)
     end
@@ -24,18 +24,29 @@ describe StaticAssociation do
     context "id uniqueness" do
       it "should raise an error with a duplicate id" do
         expect {
-          DummyClass.record id: 1 do |c|
-            c.name = 'asdf'
+          DummyClass.record id: 1 do
+            self.name = 'asdf'
           end
 
-          DummyClass.record id: 1 do |c|
-            c.name = 'asdf'
+          DummyClass.record id: 1 do
+            self.name = 'asdf'
           end
         }.to raise_error(StaticAssociation::DuplicateID)
       end
     end
 
-    context "sets up the instance" do
+    context "sets up the instance using self" do
+      subject {
+        DummyClass.record id: 1 do
+          self.name = 'asdf'
+        end
+      }
+
+      its(:id) { should == 1 }
+      its(:name) { should == 'asdf' }
+    end
+
+    context "sets up the instance using the object passed in" do
       subject {
         DummyClass.record id: 1 do |c|
           c.name = 'asdf'
@@ -45,6 +56,7 @@ describe StaticAssociation do
       its(:id) { should == 1 }
       its(:name) { should == 'asdf' }
     end
+
 
     context "without a block" do
       subject { DummyClass.record id: 1 }
@@ -64,8 +76,8 @@ describe StaticAssociation do
 
   describe ".find" do
     before do
-      DummyClass.record id: 1 do |c|
-        c.name = 'asdf'
+      DummyClass.record id: 1 do
+        self.name = 'asdf'
       end
     end
 
