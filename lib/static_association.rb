@@ -37,12 +37,12 @@ module StaticAssociation
       index[id]
     end
 
-    def record(settings)
+    def record(settings, &block)
       settings.assert_valid_keys(:id)
       id = settings.fetch(:id)
       raise DuplicateID if index.has_key?(id)
       record = self.new(id)
-      yield(record) if block_given?
+      record.instance_exec(record, &block) if block_given?
       index[id] = record
     end
   end

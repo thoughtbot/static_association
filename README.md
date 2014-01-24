@@ -31,8 +31,8 @@ Create your static association class:
 
       attr_accessor :name
 
-      record id: 0 do |day|
-        day.name = :monday
+      record id: 0 do
+        self.name = :monday
       end
     end
 
