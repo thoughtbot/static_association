@@ -26,25 +26,29 @@ Or install it yourself as:
 
 Create your static association class:
 
-    class Days
+    class Day
       include StaticAssociation
 
       attr_accessor :name
 
-      record id: 0 do
-        self.name = :monday
+      record id: 0 do |day|
+        day.name = :monday
       end
     end
 
 Calling `record` will allow you to create an instance of this static model, a unique id is mandatory. The newly created object is yielded to the passed block.
 
-The `Days` class will gain an `all` and `find` method.
+The `Day` class will gain an `all` and `find` method.
 
 ### Associations
 
 Currently just a 'belongs to' association can be created. This behaviour can be mixed into an `ActiveRecord` model:
 
-    belongs_to_static :day
+    class Event < ActiveRecord::Base
+      extend StaticAssociation::AssociationHelpers
+
+      belongs_to_static :day
+    end
 
 This assumes your model has a field `day_id`.
 
