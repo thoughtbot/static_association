@@ -33,7 +33,10 @@ module StaticAssociation
     end
 
     def find(id)
-      raise RecordNotFound unless index.has_key?(id)
+      find_by_id(id) or raise RecordNotFound
+    end
+
+    def find_by_id(id)
       index[id]
     end
 
