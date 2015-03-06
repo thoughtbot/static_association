@@ -25,7 +25,7 @@ module StaticAssociation
     delegate :each, to: :all
 
     def index
-      @index ||= ActiveSupport::OrderedHash.new
+      @index ||= {} 
     end
 
     def all
