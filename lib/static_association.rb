@@ -1,6 +1,5 @@
 require 'static_association/version'
 require 'active_support/concern'
-require 'active_support/ordered_hash'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/string/inflections'
