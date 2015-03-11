@@ -74,25 +74,41 @@ describe StaticAssociation do
     end
   end
 
-  describe ".find" do
+  describe "finders" do
     before do
       DummyClass.record id: 1 do
         self.name = 'asdf'
       end
     end
 
-    context "record exists" do
-      subject { DummyClass.find(1) }
+    describe ".find" do
+      context "record exists" do
+        subject { DummyClass.find(1) }
 
-      it { should be_kind_of(DummyClass) }
-      its(:id) { should == 1 }
+        it { should be_kind_of(DummyClass) }
+        its(:id) { should == 1 }
+      end
+
+      context "record does not exist" do
+        it "should raise a StaticAssociation::RecordNotFoundError" do
+          expect {
+            DummyClass.find(:not_in_the_index)
+          }.to raise_error(StaticAssociation::RecordNotFound)
+        end
+      end
     end
 
-    context "record does not exist" do
-      it "should raise a StaticAssociation::RecordNotFoundError" do
-        expect {
-          DummyClass.find(:not_in_the_index)
-        }.to raise_error(StaticAssociation::RecordNotFound)
+    describe ".find_by_id" do
+      context "record exists" do
+        subject { DummyClass.find_by_id(1) }
+
+        it { should be_kind_of(DummyClass) }
+        its(:id) { should == 1 }
+      end
+
+      context "record does not exist" do
+        subject { DummyClass.find_by_id(:not_in_the_index) }
+        it { should be_nil }
       end
     end
   end
