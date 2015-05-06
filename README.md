@@ -10,7 +10,9 @@ This has been extracted from ProjectsDB and Hotleads, see the `BudgetCategory`, 
 
 Add this line to your application's Gemfile:
 
-    gem 'static_association'
+```ruby
+gem 'static_association'
+```
 
 And then execute:
 
@@ -26,15 +28,17 @@ Or install it yourself as:
 
 Create your static association class:
 
-    class Day
-      include StaticAssociation
+```ruby
+class Day
+  include StaticAssociation
 
-      attr_accessor :name
+  attr_accessor :name
 
-      record id: 0 do |day|
-        day.name = :monday
-      end
-    end
+  record id: 0 do |day|
+    day.name = :monday
+  end
+end
+```
 
 Calling `record` will allow you to create an instance of this static model, a unique id is mandatory. The newly created object is yielded to the passed block.
 
@@ -44,11 +48,13 @@ The `Day` class will gain an `all` and `find` method.
 
 Currently just a 'belongs to' association can be created. This behaviour can be mixed into an `ActiveRecord` model:
 
-    class Event < ActiveRecord::Base
-      extend StaticAssociation::AssociationHelpers
+```ruby
+class Event < ActiveRecord::Base
+  extend StaticAssociation::AssociationHelpers
 
-      belongs_to_static :day
-    end
+  belongs_to_static :day
+end
+```
 
 This assumes your model has a field `day_id`.
 
