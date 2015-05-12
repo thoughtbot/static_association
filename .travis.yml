@@ -3,7 +3,9 @@ install: bundle install
 script:
  - bundle exec rake
 rvm:
-  - 2.0.0
+  - 2.2
+  - 2.1
+  - 2.0
   - 1.9.3
 gemfile:
   - gemfiles/3.0.gemfile
