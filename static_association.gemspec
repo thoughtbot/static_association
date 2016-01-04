@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{StaticAssociation adds a simple enum type that can act like an ActiveRecord association for static data.}
   spec.summary       = %q{ActiveRecord like associations for static data}
   spec.license       = "MIT"
+  spec.homepage      = "https://github.com/New-Bamboo/static_association"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
