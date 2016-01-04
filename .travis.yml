@@ -1,5 +1,6 @@
 language: ruby
 install: bundle install
+sudo: false
 script:
  - bundle exec rake
 rvm:
