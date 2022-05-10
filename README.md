@@ -40,7 +40,13 @@ end
 
 Calling `record` will allow you to create an instance of this static model, a unique id is mandatory. The newly created object is yielded to the passed block.
 
-The `Day` class will gain an `all` and `find` method.
+The `Day` class will gain `.all`, `.find` and `.where` methods.
+
+- The `.all` method returns all the static records defined in the class
+- The `.find` method accepts a single id and returns the matching record. If the
+  record does not exist, a `RecordNotFound` error is raised.
+- The `.where` method accepts an array of ids and returns all records with
+  matching ids.
 
 ### Associations
 

@@ -24,7 +24,7 @@ module StaticAssociation
     delegate :each, to: :all
 
     def index
-      @index ||= {} 
+      @index ||= {}
     end
 
     def all
@@ -46,6 +46,10 @@ module StaticAssociation
       record = self.new(id)
       record.instance_exec(record, &block) if block_given?
       index[id] = record
+    end
+
+    def where(ids)
+      ids.map { |id| find_by_id(id) }.compact
     end
   end
 

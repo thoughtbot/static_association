@@ -75,13 +75,9 @@ describe StaticAssociation do
   end
 
   describe "finders" do
-    before do
-      DummyClass.record id: 1 do
-        self.name = 'asdf'
-      end
-    end
-
     describe ".find" do
+      before { create_dummy_class }
+
       context "record exists" do
         subject { DummyClass.find(1) }
 
@@ -99,6 +95,8 @@ describe StaticAssociation do
     end
 
     describe ".find_by_id" do
+      before { create_dummy_class }
+
       context "record exists" do
         subject { DummyClass.find_by_id(1) }
 
@@ -109,6 +107,18 @@ describe StaticAssociation do
       context "record does not exist" do
         subject { DummyClass.find_by_id(:not_in_the_index) }
         it { should be_nil }
+      end
+    end
+
+    describe ".where" do
+      it "returns records that exist" do
+        record_1 = DummyClass.record(id: 1) { self.name = "First" }
+        record_2 = DummyClass.record(id: 2) { self.name = "Second" }
+        record_3 = DummyClass.record(id: 3) { self.name = "Third" }
+
+        results = DummyClass.where([1, 3])
+
+        expect(results).to eq([record_1, record_3])
       end
     end
   end
@@ -137,6 +147,12 @@ describe StaticAssociation do
         DummyClass.should_receive(:find)
       }
       associated_class.dodo_class
+    end
+  end
+
+  def create_dummy_class
+    DummyClass.record id: 1 do
+      self.name = 'asdf'
     end
   end
 end
