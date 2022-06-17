@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = "StaticAssociation adds a simple enum type that can act like an ActiveRecord association for static data."
   spec.summary = "ActiveRecord like associations for static data"
   spec.license = "MIT"
-  spec.homepage = "https://github.com/New-Bamboo/static_association"
+  spec.homepage = "https://github.com/thoughtbot/static_association"
 
   spec.files = `git ls-files`.split($/)
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -19,9 +19,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 6.0.0"
 
-  spec.add_development_dependency "rspec", "~> 3.4"
-  spec.add_development_dependency "rspec-its", "~> 1.2"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "standard"
 end
