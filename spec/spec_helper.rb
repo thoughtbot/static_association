@@ -4,12 +4,12 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require 'bundler/setup'
+require "bundler/setup"
 
-require 'rspec/its'
+require "rspec/its"
 
-require 'static_association'
+require "static_association"
 
 RSpec.configure do |config|
-  config.order = 'random'
+  config.order = "random"
 end
