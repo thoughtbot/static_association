@@ -1,6 +1,7 @@
 # StaticAssociation
 
-[![Build Status](https://travis-ci.org/New-Bamboo/static_association.png?branch=master)](https://travis-ci.org/New-Bamboo/static_association)
+![test](https://github.com/thoughtbot/static_association/actions/workflows/test.yml/badge.svg)
+![lint](https://github.com/thoughtbot/static_association/actions/workflows/lint.yml/badge.svg)
 
 Adds basic ActiveRecord-like associations to static data.
 
@@ -9,7 +10,7 @@ Adds basic ActiveRecord-like associations to static data.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'static_association'
+gem "static_association"
 ```
 
 And then execute:
@@ -61,6 +62,6 @@ This assumes your model has a field `day_id`.
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Run the tests (`rake`)
+4. Run lint checks and tests (`bundle exec rake`)
 5. Push to the branch (`git push origin my-new-feature`)
 6. Create new Pull Request
