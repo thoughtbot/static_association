@@ -2,7 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "i18n"
-gem "activesupport", "3.1"
+gem "activesupport", "7.0"
 
-gemspec :path => "../"
+gemspec path: "../"
