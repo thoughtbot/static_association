@@ -1,22 +1,30 @@
-require 'spec_helper'
-require 'static_association'
+require "spec_helper"
+require "static_association"
+
+class DummyClass
+  include StaticAssociation
+  attr_accessor :name
+end
+
+class AssociationClass
+  attr_accessor :dummy_class_id
+  attr_accessor :dodo_class_id
+
+  extend StaticAssociation::AssociationHelpers
+  belongs_to_static :dummy_class
+  belongs_to_static :dodo_class, class_name: "DummyClass"
+end
 
 describe StaticAssociation do
-
-  class DummyClass
-    include StaticAssociation
-    attr_accessor :name
-  end
-
   after do
-    DummyClass.instance_variable_set("@index", {})
+    DummyClass.instance_variable_set(:@index, {})
   end
 
   describe ".record" do
     it "should add a record" do
       expect {
         DummyClass.record id: 1 do
-          self.name = 'asdf'
+          self.name = "asdf"
         end
       }.to change(DummyClass, :count).by(1)
     end
@@ -25,11 +33,11 @@ describe StaticAssociation do
       it "should raise an error with a duplicate id" do
         expect {
           DummyClass.record id: 1 do
-            self.name = 'asdf'
+            self.name = "asdf"
           end
 
           DummyClass.record id: 1 do
-            self.name = 'asdf'
+            self.name = "asdf"
           end
         }.to raise_error(StaticAssociation::DuplicateID)
       end
@@ -38,25 +46,24 @@ describe StaticAssociation do
     context "sets up the instance using self" do
       subject {
         DummyClass.record id: 1 do
-          self.name = 'asdf'
+          self.name = "asdf"
         end
       }
 
       its(:id) { should == 1 }
-      its(:name) { should == 'asdf' }
+      its(:name) { should == "asdf" }
     end
 
     context "sets up the instance using the object passed in" do
       subject {
         DummyClass.record id: 1 do |c|
-          c.name = 'asdf'
+          c.name = "asdf"
         end
       }
 
       its(:id) { should == 1 }
-      its(:name) { should == 'asdf' }
+      its(:name) { should == "asdf" }
     end
-
 
     context "without a block" do
       subject { DummyClass.record id: 1 }
@@ -77,7 +84,7 @@ describe StaticAssociation do
   describe "finders" do
     before do
       DummyClass.record id: 1 do
-        self.name = 'asdf'
+        self.name = "asdf"
       end
     end
 
@@ -114,15 +121,6 @@ describe StaticAssociation do
   end
 
   describe ".belongs_to_static" do
-    class AssociationClass
-      attr_accessor :dummy_class_id
-      attr_accessor :dodo_class_id
-
-      extend StaticAssociation::AssociationHelpers
-      belongs_to_static :dummy_class
-      belongs_to_static :dodo_class, class_name: 'DummyClass'
-    end
-
     let(:associated_class) { AssociationClass.new }
 
     it "creates reader method that uses the correct singularized class when finding static association" do
