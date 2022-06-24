@@ -43,19 +43,7 @@ module StaticAssociation
     end
 
     def find_by(**args)
-      records = index.values
-
-      records.find do |record|
-        matches = args.map do |attribute, value|
-          if record.respond_to?(attribute)
-            record.send(attribute) == value
-          else
-            raise UndefinedAttribute
-          end
-        end
-
-        matches.all?
-      end
+      all.find { |record| matches_attributes?(record: record, attributes: args) }
     end
 
     def record(settings, &block)
@@ -65,6 +53,16 @@ module StaticAssociation
       record = new(id)
       record.instance_exec(record, &block) if block
       index[id] = record
+    end
+
+    private
+
+    def matches_attributes?(record:, attributes:)
+      attributes.all? do |attribute, value|
+        raise UndefinedAttribute unless record.respond_to?(attribute)
+
+        record.send(attribute) == value
+      end
     end
   end
 
