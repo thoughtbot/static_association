@@ -7,6 +7,8 @@ require "active_support/core_ext/string/inflections"
 module StaticAssociation
   extend ActiveSupport::Concern
 
+  class ArgumentError < StandardError; end
+
   class DuplicateID < StandardError; end
 
   class RecordNotFound < StandardError; end
@@ -43,6 +45,8 @@ module StaticAssociation
     end
 
     def find_by(**args)
+      args.any? or raise ArgumentError
+
       all.find { |record| matches_attributes?(record: record, attributes: args) }
     end
 
@@ -59,7 +63,7 @@ module StaticAssociation
 
     def matches_attributes?(record:, attributes:)
       attributes.all? do |attribute, value|
-        raise UndefinedAttribute unless record.respond_to?(attribute)
+        record.respond_to?(attribute) or raise UndefinedAttribute
 
         record.send(attribute) == value
       end

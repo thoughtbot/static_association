@@ -133,11 +133,19 @@ describe StaticAssociation do
         it { should be_nil }
       end
 
-      context "with invalid attributes" do
+      context "with undefined attributes" do
         it "raises a StaticAssociation::UndefinedAttribute" do
           expect {
             DummyClass.find_by(undefined_attribute: 1)
           }.to raise_error(StaticAssociation::UndefinedAttribute)
+        end
+      end
+
+      context "with no attributes" do
+        it "raises a StaticAssociation::ArgumentError" do
+          expect {
+            DummyClass.find_by
+          }.to raise_error(StaticAssociation::ArgumentError)
         end
       end
     end
