@@ -65,7 +65,7 @@ module StaticAssociation
       attributes.all? do |attribute, value|
         record.respond_to?(attribute) or raise UndefinedAttribute
 
-        record.send(attribute) == value
+        record.public_send(attribute) == value
       end
     end
   end
