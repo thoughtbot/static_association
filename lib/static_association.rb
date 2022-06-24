@@ -11,6 +11,8 @@ module StaticAssociation
 
   class RecordNotFound < StandardError; end
 
+  class UndefinedAttribute < StandardError; end
+
   attr_reader :id
 
   private
@@ -38,6 +40,22 @@ module StaticAssociation
 
     def find_by_id(id)
       index[id]
+    end
+
+    def find_by(**args)
+      records = index.values
+
+      records.find do |record|
+        matches = args.map do |attribute, value|
+          if record.respond_to?(attribute)
+            record.send(attribute) == value
+          else
+            raise UndefinedAttribute
+          end
+        end
+
+        matches.all?
+      end
     end
 
     def record(settings, &block)
