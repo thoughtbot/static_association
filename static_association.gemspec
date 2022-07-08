@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 6.0.0"
 
   spec.add_development_dependency "rspec"
-  spec.add_development_dependency "rspec-its"
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "standard"
 end

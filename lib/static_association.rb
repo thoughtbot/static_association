@@ -56,9 +56,7 @@ module StaticAssociation
 
       send(:define_method, name) do
         foreign_key = send("#{name}_id")
-        class_name.constantize.find(foreign_key) if foreign_key
-      rescue RecordNotFound
-        nil
+        class_name.constantize.find_by_id(foreign_key)
       end
 
       send(:define_method, "#{name}=") do |assoc|
