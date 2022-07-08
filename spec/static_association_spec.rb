@@ -15,126 +15,134 @@ class AssociationClass
   belongs_to_static :dodo_class, class_name: "DummyClass"
 end
 
-describe StaticAssociation do
+RSpec.describe StaticAssociation do
   after do
     DummyClass.instance_variable_set(:@index, {})
   end
 
   describe ".record" do
-    it "should add a record" do
-      expect {
-        DummyClass.record id: 1 do
-          self.name = "asdf"
-        end
-      }.to change(DummyClass, :count).by(1)
+    it "adds a record" do
+      expect { DummyClass.record(id: 1) { self.name = "test" } }
+        .to change(DummyClass, :count).by(1)
     end
 
-    context "id uniqueness" do
-      it "should raise an error with a duplicate id" do
-        expect {
-          DummyClass.record id: 1 do
-            self.name = "asdf"
-          end
+    context "when using `self`" do
+      it "assigns attributes" do
+        record = DummyClass.record(id: 1) { self.name = "test" }
 
-          DummyClass.record id: 1 do
-            self.name = "asdf"
-          end
-        }.to raise_error(StaticAssociation::DuplicateID)
+        expect(record.id).to eq(1)
+        expect(record.name).to eq("test")
       end
     end
 
-    context "sets up the instance using self" do
-      subject {
-        DummyClass.record id: 1 do
-          self.name = "asdf"
-        end
-      }
+    context "when using the object" do
+      it "assigns attributes" do
+        record = DummyClass.record(id: 1) { |i| i.name = "test" }
 
-      its(:id) { should == 1 }
-      its(:name) { should == "asdf" }
+        expect(record.id).to eq(1)
+        expect(record.name).to eq("test")
+      end
     end
 
-    context "sets up the instance using the object passed in" do
-      subject {
-        DummyClass.record id: 1 do |c|
-          c.name = "asdf"
-        end
-      }
+    context "when the id is a duplicate" do
+      it "raises an error" do
+        DummyClass.record(id: 1) { self.name = "test0" }
 
-      its(:id) { should == 1 }
-      its(:name) { should == "asdf" }
+        expect { DummyClass.record(id: 1) { self.name = "test1" } }
+          .to raise_error(StaticAssociation::DuplicateID)
+      end
+    end
+
+    context "when an attribute is not defined" do
+      it "raises an error" do
+        expect { DummyClass.record(id: 1) { self.foo = "bar" } }
+          .to raise_error(NoMethodError)
+      end
+    end
+
+    context "when a key is invalid" do
+      it "raises an error" do
+        expect { DummyClass.record(id: 1, foo: "bar") }
+          .to raise_error(ArgumentError)
+      end
     end
 
     context "without a block" do
-      subject { DummyClass.record id: 1 }
-
-      its(:id) { should == 1 }
-      its(:name) { should be_nil }
-    end
-
-    context "asserting valid keys" do
-      it "should raise an error" do
-        expect {
-          DummyClass.record id: 1, foo: :bar
-        }.to raise_error(ArgumentError)
+      it "adds a record" do
+        expect { DummyClass.record(id: 1) }.to change(DummyClass, :count).by(1)
       end
     end
   end
 
-  describe "finders" do
-    before do
-      DummyClass.record id: 1 do
-        self.name = "asdf"
+  describe ".all" do
+    it "returns all records" do
+      record1 = DummyClass.record(id: 1)
+      record2 = DummyClass.record(id: 2)
+
+      records = DummyClass.all
+
+      expect(records).to contain_exactly(record1, record2)
+    end
+  end
+
+  describe ".find" do
+    context "when the record exists" do
+      it "returns the record" do
+        record = DummyClass.record(id: 1)
+
+        found_record = DummyClass.find(1)
+
+        expect(found_record).to eq(record)
       end
     end
 
-    describe ".find" do
-      context "record exists" do
-        subject { DummyClass.find(1) }
-
-        it { should be_kind_of(DummyClass) }
-        its(:id) { should == 1 }
+    context "when the record does not exist" do
+      it "raises an error" do
+        expect { DummyClass.find(1) }
+          .to raise_error(StaticAssociation::RecordNotFound)
       end
+    end
+  end
 
-      context "record does not exist" do
-        it "should raise a StaticAssociation::RecordNotFoundError" do
-          expect {
-            DummyClass.find(:not_in_the_index)
-          }.to raise_error(StaticAssociation::RecordNotFound)
-        end
+  describe ".find_by_id" do
+    context "when the record exists" do
+      it "returns the record" do
+        record = DummyClass.record(id: 1)
+
+        found_record = DummyClass.find_by_id(1)
+
+        expect(found_record).to eq(record)
       end
     end
 
-    describe ".find_by_id" do
-      context "record exists" do
-        subject { DummyClass.find_by_id(1) }
+    context "when the record does not exist" do
+      it "returns nil" do
+        found_record = DummyClass.find_by_id(1)
 
-        it { should be_kind_of(DummyClass) }
-        its(:id) { should == 1 }
-      end
-
-      context "record does not exist" do
-        subject { DummyClass.find_by_id(:not_in_the_index) }
-        it { should be_nil }
+        expect(found_record).to be_nil
       end
     end
   end
 
   describe ".belongs_to_static" do
-    let(:associated_class) { AssociationClass.new }
+    it "defines a reader method for the association" do
+      associated_class = AssociationClass.new
+      allow(DummyClass).to receive(:find_by_id)
 
-    it "creates reader method that uses the correct singularized class when finding static association" do
-      expect {
-        DummyClass.should_receive(:find)
-      }
       associated_class.dummy_class
+
+      expect(DummyClass).to have_received(:find_by_id)
     end
 
-    it "creates a different reader method that uses the specified class when finding static asssociation" do
-      expect {
-        DummyClass.should_receive(:find)
-      }
-      associated_class.dodo_class
+    context "when `class_name` is specified" do
+      it "defines a reader method for the association" do
+        associated_class = AssociationClass.new
+        allow(DummyClass).to receive(:find_by_id)
+
+        associated_class.dodo_class
+
+        expect(DummyClass).to have_received(:find_by_id)
+      end
     end
   end
 end
