@@ -124,6 +124,18 @@ RSpec.describe StaticAssociation do
     end
   end
 
+  describe ".where" do
+    it "returns all records with the given ids" do
+      record1 = DummyClass.record(id: 1)
+      _record2 = DummyClass.record(id: 2)
+      record3 = DummyClass.record(id: 3)
+
+      results = DummyClass.where(id: [1, 3, 4])
+
+      expect(results).to contain_exactly(record1, record3)
+    end
+  end
+
   describe ".belongs_to_static" do
     it "defines a reader method for the association" do
       associated_class = AssociationClass.new
