@@ -41,7 +41,9 @@ end
 
 Calling `record` will allow you to create an instance of this static model, a unique id is mandatory. The newly created object is yielded to the passed block.
 
-The `Day` class will gain an `all` and `find` method.
+The `Day` class will gain the `all`, `find` and `find_by` methods.
+
+- `find_by` finds the first record matching the specified conditions. If no record is found, returns `nil`.
 
 ### Associations
 

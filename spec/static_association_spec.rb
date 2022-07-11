@@ -122,6 +122,37 @@ RSpec.describe StaticAssociation do
         expect(found_record).to be_nil
       end
     end
+
+    describe ".find_by" do
+      context "record exists" do
+        subject { DummyClass.find_by(id: 1) }
+
+        it { should be_kind_of(DummyClass) }
+        its(:id) { should == 1 }
+      end
+
+      context "record does not exist" do
+        subject { DummyClass.find_by(id: 2) }
+
+        it { should be_nil }
+      end
+
+      context "with undefined attributes" do
+        it "raises a StaticAssociation::UndefinedAttribute" do
+          expect {
+            DummyClass.find_by(undefined_attribute: 1)
+          }.to raise_error(StaticAssociation::UndefinedAttribute)
+        end
+      end
+
+      context "with no attributes" do
+        it "raises a StaticAssociation::ArgumentError" do
+          expect {
+            DummyClass.find_by
+          }.to raise_error(StaticAssociation::ArgumentError)
+        end
+      end
+    end
   end
 
   describe ".belongs_to_static" do
