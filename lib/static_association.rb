@@ -40,6 +40,10 @@ module StaticAssociation
       index[id]
     end
 
+    def where(id: [])
+      all.select { |record| id.include?(record.id) }
+    end
+
     def record(settings, &block)
       settings.assert_valid_keys(:id)
       id = settings.fetch(:id)
