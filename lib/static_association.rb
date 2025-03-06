@@ -59,12 +59,12 @@ module StaticAssociation
       class_name = opts.fetch(:class_name, name.to_s.camelize)
 
       send(:define_method, name) do
-        foreign_key = send("#{name}_id")
+        foreign_key = send(:"#{name}_id")
         class_name.constantize.find_by_id(foreign_key)
       end
 
       send(:define_method, "#{name}=") do |assoc|
-        send("#{name}_id=", assoc.id)
+        send(:"#{name}_id=", assoc.id)
       end
     end
   end
