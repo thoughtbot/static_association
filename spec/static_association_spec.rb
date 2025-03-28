@@ -88,6 +88,17 @@ RSpec.describe StaticAssociation do
     end
   end
 
+  describe ".ids" do
+    it "returns array of ids for all records" do
+      _record1 = DummyClass.record(id: 1)
+      _record2 = DummyClass.record(id: 2)
+
+      ids = DummyClass.ids
+
+      expect(ids).to contain_exactly(1, 2)
+    end
+  end
+
   describe ".find" do
     context "when the record exists" do
       it "returns the record" do
