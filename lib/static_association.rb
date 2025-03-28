@@ -7,9 +7,13 @@ require "active_support/core_ext/string/inflections"
 module StaticAssociation
   extend ActiveSupport::Concern
 
+  class ArgumentError < StandardError; end
+
   class DuplicateID < StandardError; end
 
   class RecordNotFound < StandardError; end
+
+  class UndefinedAttribute < StandardError; end
 
   attr_reader :id
 
@@ -52,6 +56,12 @@ module StaticAssociation
       all.select { |record| id.include?(record.id) }
     end
 
+    def find_by(**args)
+      args.any? or raise ArgumentError
+
+      all.find { |record| matches_attributes?(record: record, attributes: args) }
+    end
+
     def record(settings, &block)
       settings.assert_valid_keys(:id)
       id = settings.fetch(:id)
@@ -63,6 +73,18 @@ module StaticAssociation
       record = new(id)
       record.instance_exec(record, &block) if block
       index[id] = record
+    end
+
+    private
+
+    def matches_attributes?(record:, attributes:)
+      attributes.all? do |attribute, value|
+        record.respond_to?(attribute) or raise UndefinedAttribute.new(
+          "Undefined attribute '#{attribute}'"
+        )
+
+        record.public_send(attribute) == value
+      end
     end
   end
 
