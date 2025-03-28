@@ -122,6 +122,46 @@ RSpec.describe StaticAssociation do
         expect(found_record).to be_nil
       end
     end
+
+    context "when id argument is a numeric string" do
+      it "returns the record" do
+        record = DummyClass.record(id: 1)
+
+        found_record = DummyClass.find_by_id("1")
+
+        expect(found_record).to eq(record)
+      end
+    end
+
+    context "when id argument is a non-numeric string" do
+      it "returns the record" do
+        DummyClass.record(id: 1)
+
+        found_record = DummyClass.find_by_id("foo")
+
+        expect(found_record).to be_nil
+      end
+    end
+
+    context "when record ids are strings and id argument matches a record" do
+      it "returns the record" do
+        record = DummyClass.record(id: "foo")
+
+        found_record = DummyClass.find_by_id("foo")
+
+        expect(found_record).to eq(record)
+      end
+    end
+
+    context "when record ids are strings and id argument doesn't match a record" do
+      it "returns nil" do
+        DummyClass.record(id: "foo")
+
+        found_record = DummyClass.find_by_id("bar")
+
+        expect(found_record).to be_nil
+      end
+    end
   end
 
   describe ".where" do

@@ -37,7 +37,9 @@ module StaticAssociation
     end
 
     def find_by_id(id)
-      index[id]
+      index[
+        Integer(id, exception: false) || id
+      ]
     end
 
     def where(id: [])
