@@ -46,6 +46,7 @@ block.
 The `Day` class will gain `.all`, `.find`, `.find_by_id`, and `.where` methods.
 
 - The `.all` method returns all the static records defined in the class.
+- The `.ids` method returns an array of all the ids of the static records.
 - The `.find` method accepts a single id and returns the matching record. If the
   record does not exist, a `RecordNotFound` error is raised.
 - The `.find_by_id` method behaves similarly to the `.find` method, except it

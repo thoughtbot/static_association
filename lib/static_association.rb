@@ -32,6 +32,10 @@ module StaticAssociation
       index.values
     end
 
+    def ids
+      index.keys
+    end
+
     def find(id)
       find_by_id(id) or raise RecordNotFound
     end
