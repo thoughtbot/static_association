@@ -33,7 +33,9 @@ module StaticAssociation
     end
 
     def find(id)
-      find_by_id(id) or raise RecordNotFound
+      find_by_id(id) or raise RecordNotFound.new(
+        "Couldn't find DummyClass with 'id'=#{id}"
+      )
     end
 
     def find_by_id(id)
@@ -49,7 +51,11 @@ module StaticAssociation
     def record(settings, &block)
       settings.assert_valid_keys(:id)
       id = settings.fetch(:id)
-      raise DuplicateID if index.has_key?(id)
+
+      if index.has_key?(id)
+        raise DuplicateID.new("Duplicate record with 'id'=#{id} found")
+      end
+
       record = new(id)
       record.instance_exec(record, &block) if block
       index[id] = record

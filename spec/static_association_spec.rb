@@ -49,7 +49,10 @@ RSpec.describe StaticAssociation do
         DummyClass.record(id: 1) { self.name = "test0" }
 
         expect { DummyClass.record(id: 1) { self.name = "test1" } }
-          .to raise_error(StaticAssociation::DuplicateID)
+          .to raise_error(
+            StaticAssociation::DuplicateID,
+            "Duplicate record with 'id'=1 found"
+          )
       end
     end
 
@@ -99,7 +102,10 @@ RSpec.describe StaticAssociation do
     context "when the record does not exist" do
       it "raises an error" do
         expect { DummyClass.find(1) }
-          .to raise_error(StaticAssociation::RecordNotFound)
+          .to raise_error(
+            StaticAssociation::RecordNotFound,
+            "Couldn't find DummyClass with 'id'=1"
+          )
       end
     end
   end
