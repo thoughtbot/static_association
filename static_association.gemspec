@@ -21,5 +21,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "standard"
-  spec.metadata["test_files"] = Dir.glob("test/**/*") + Dir.glob("spec/**/*") + Dir.glob("features/**/*")
 end
