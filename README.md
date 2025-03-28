@@ -43,23 +43,21 @@ Calling `record` will allow you to create an instance of this static model,
 a unique id is mandatory. The newly created object is yielded to the passed
 block.
 
-The `Day` class will gain `.all`, `.find`, `.find_by_id`, `.find_by` and
-`.where` methods.
+The `Day` class will gain the following methods:
 
-- The `.all` method returns all the static records defined in the class.
-- The `.ids` method returns an array of all the ids of the static records.
-- The `.find` method accepts a single id and returns the matching record. If the
-  record does not exist, a `RecordNotFound` error is raised.
-- The `.find_by_id` method behaves similarly to the `.find` method, except it
-  returns `nil` when a record does not exist.
-- `find_by` finds the first record matching the specified conditions. If no
+- `.all`: returns all the static records defined in the class.
+- `.ids`: returns an array of all the ids of the static records.
+- `.find`: accepts a single id and returns the matching record. If the record
+  does not exist, a `RecordNotFound` error is raised.
+- `.find_by_id`: behaves similarly to the `.find` method, except it returns
+  `nil` when a record does not exist.
+- `.find_by`: finds the first record matching the specified conditions. If no
   record is found, returns `nil`.
-- The `.where` method accepts an array of ids and returns all records with
-  matching ids.
+- `.where`: accepts an array of ids and returns all records with matching ids.
 
 ### Associations
 
-Currently just a 'belongs to' association can be created. This behaviour can be
+Currently just a `belongs_to` association can be created. This behaviour can be
 mixed into an `ActiveRecord` model:
 
 ```ruby
