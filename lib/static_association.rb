@@ -62,6 +62,13 @@ module StaticAssociation
       all.find { |record| matches_attributes?(record: record, attributes: args) }
     end
 
+    def find_by!(**args)
+      find_by(**args) or raise RecordNotFound.new(
+        "Couldn't find #{name} with " +
+        args.map { |k, v| "#{k}=#{v}" }.join(", ")
+      )
+    end
+
     def record(settings, &block)
       settings.assert_valid_keys(:id)
       id = settings.fetch(:id)

@@ -119,6 +119,16 @@ RSpec.describe StaticAssociation do
           )
       end
     end
+
+    context "when argument is numeric string" do
+      it "returns the record" do
+        record = DummyClass.record(id: 1)
+
+        found_record = DummyClass.find("1")
+
+        expect(found_record).to eq(record)
+      end
+    end
   end
 
   describe ".find_by_id" do
@@ -264,7 +274,7 @@ RSpec.describe StaticAssociation do
       end
 
       context "with undefined attributes" do
-        it "raises a StaticAssociation::UndefinedAttribute" do
+        it "raises an error" do
           DummyClass.record(id: 1)
 
           expect {
@@ -282,6 +292,105 @@ RSpec.describe StaticAssociation do
             DummyClass.find_by
           }.to raise_error(StaticAssociation::ArgumentError)
         end
+      end
+    end
+  end
+
+  describe ".find_by!" do
+    context "when record exists with the specified attribute value" do
+      it "returns the record" do
+        record1 = DummyClass.record(id: 1) do |r|
+          r.name = "foo"
+        end
+        _record2 = DummyClass.record(id: 2) do |r|
+          r.name = "bar"
+        end
+
+        found_record = DummyClass.find_by!(name: "foo")
+
+        expect(found_record).to eq(record1)
+      end
+    end
+
+    context "when no record exists that matches the specified attribute value" do
+      it "raises an error" do
+        DummyClass.record(id: 1) do |r|
+          r.name = "foo"
+        end
+
+        expect {
+          DummyClass.find_by!(name: "bar")
+        }.to raise_error(
+          StaticAssociation::RecordNotFound,
+          "Couldn't find DummyClass with name=bar"
+        )
+      end
+    end
+
+    context "when multiple records match the specified attribute value" do
+      it "returns the first matching record" do
+        record1 = DummyClass.record(id: 1) do |r|
+          r.name = "foo"
+        end
+        _record2 = DummyClass.record(id: 2) do |r|
+          r.name = "foo"
+        end
+
+        found_record = DummyClass.find_by!(name: "foo")
+
+        expect(found_record).to eq(record1)
+      end
+    end
+
+    context "when specifying multiple attribute values" do
+      it "returns the record matching all attributes" do
+        _record1 = DummyClass.record(id: 1) do |r|
+          r.name = "foo"
+        end
+        record2 = DummyClass.record(id: 2) do |r|
+          r.name = "foo"
+        end
+
+        found_record = DummyClass.find_by!(id: 2, name: "foo")
+
+        expect(found_record).to eq(record2)
+      end
+    end
+
+    context "when specifying multiple attribute values but no record " \
+            "matches all attributes" do
+      it "raises an error" do
+        _record1 = DummyClass.record(id: 1) do |r|
+          r.name = "foo"
+        end
+
+        expect {
+          DummyClass.find_by!(id: 1, name: "bar")
+        }.to raise_error(
+          StaticAssociation::RecordNotFound,
+          "Couldn't find DummyClass with id=1, name=bar"
+        )
+      end
+    end
+
+    context "with undefined attributes" do
+      it "raises a StaticAssociation::UndefinedAttribute" do
+        DummyClass.record(id: 1)
+
+        expect {
+          DummyClass.find_by!(undefined_attribute: 1)
+        }.to raise_error(
+          StaticAssociation::UndefinedAttribute,
+          "Undefined attribute 'undefined_attribute'"
+        )
+      end
+    end
+
+    context "with no attributes" do
+      it "raises a StaticAssociation::ArgumentError" do
+        expect {
+          DummyClass.find_by!
+        }.to raise_error(StaticAssociation::ArgumentError)
       end
     end
   end

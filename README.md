@@ -53,6 +53,8 @@ The `Day` class will gain the following methods:
   `nil` when a record does not exist.
 - `.find_by`: finds the first record matching the specified conditions. If no
   record is found, returns `nil`.
+- `find_by!` behaves like `find_by` but raises a
+  `StaticAssociation::RecordNotFound` error if no record is found.
 - `.where`: accepts an array of ids and returns all records with matching ids.
 
 ### Associations
