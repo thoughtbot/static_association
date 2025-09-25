@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Use including class name for error messages (#TODO)
+
 ## v0.2.0 (20 June 2025)
 
 ### Added

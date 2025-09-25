@@ -42,7 +42,7 @@ module StaticAssociation
 
     def find(id)
       find_by_id(id) or raise RecordNotFound.new(
-        "Couldn't find DummyClass with 'id'=#{id}"
+        "Couldn't find #{name} with 'id'=#{id}"
       )
     end
 
