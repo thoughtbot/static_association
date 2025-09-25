@@ -117,6 +117,13 @@ RSpec.describe StaticAssociation do
             StaticAssociation::RecordNotFound,
             "Couldn't find DummyClass with 'id'=1"
           )
+
+        stub_const("NewDummyClass", Class.new(DummyClass))
+        expect { NewDummyClass.find(1) }
+          .to raise_error(
+            StaticAssociation::RecordNotFound,
+            "Couldn't find NewDummyClass with 'id'=1"
+          )
       end
     end
 
