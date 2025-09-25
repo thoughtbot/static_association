@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Use including class name for error messages (#TODO)
+- Use including class name for error messages (#31)
 
 ## v0.2.0 (20 June 2025)
 
