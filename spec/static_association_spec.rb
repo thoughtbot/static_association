@@ -3,7 +3,9 @@ require "static_association"
 
 class DummyClass
   include StaticAssociation
+
   attr_accessor :name
+  attr_evaluated :gender
 end
 
 class AssociationClass
@@ -11,6 +13,7 @@ class AssociationClass
   attr_accessor :dodo_class_id
 
   extend StaticAssociation::AssociationHelpers
+
   belongs_to_static :dummy_class
   belongs_to_static :dodo_class, class_name: "DummyClass"
 end
@@ -73,6 +76,49 @@ RSpec.describe StaticAssociation do
     context "without a block" do
       it "adds a record" do
         expect { DummyClass.record(id: 1) }.to change(DummyClass, :count).by(1)
+      end
+    end
+
+    context "when attr_evaluated defined attribute is assigned a lambda" do
+      it "evaluates the lambda when the attribute is read" do
+        record = DummyClass.record(id: 1) do
+          self.gender = -> do
+            if name == "Jane"
+              :female
+            else
+              :male
+            end
+          end
+        end
+
+        expect(record.gender).to eq(:male)
+      end
+    end
+
+    context "when attr_evaluated defined attribute is assigned a proc" do
+      it "evaluates the proc when the attribute is read" do
+        record = DummyClass.record(id: 1) do
+          self.name = "Jane"
+          self.gender = proc do
+            if @name == "Jane"
+              :female
+            else
+              :male
+            end
+          end
+        end
+
+        expect(record.gender).to eq(:female)
+      end
+    end
+
+    context "when attr_evaluated defined attribute is assigned a static value" do
+      it "returns the assigned value when the attribute is read" do
+        record = DummyClass.record(id: 1) do
+          self.gender = "Not disclosed"
+        end
+
+        expect(record.gender).to eq("Not disclosed")
       end
     end
   end

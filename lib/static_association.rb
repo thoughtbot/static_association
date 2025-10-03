@@ -82,6 +82,22 @@ module StaticAssociation
       index[id] = record
     end
 
+    def attr_evaluated(*names)
+      attr_writer(*names)
+
+      names.each do |name|
+        define_method(name) do
+          attr_value = instance_variable_get("@#{name}")
+
+          if attr_value.respond_to?(:call)
+            instance_exec(&attr_value)
+          else
+            attr_value
+          end
+        end
+      end
+    end
+
     private
 
     def matches_attributes?(record:, attributes:)
