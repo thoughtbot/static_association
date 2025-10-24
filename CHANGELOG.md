@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## v0.3.0 (24 October 2025)
 
+- Add `attr_evaluated` to define attributes that are evaluated/computed at runtime (#32)
 - Use including class name for error messages (#31)
 
 ## v0.2.0 (20 June 2025)
